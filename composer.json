@@ -1,0 +1,13 @@
+{
+    "name": "george/yuuki",
+    "description": "The new TShock statistics server",
+    "authors": [
+        {
+            "name": "George",
+            "email": "joshuaharris51@gmail.com"
+        }
+    ],
+    "require": {
+        "catfan/Medoo": "^0.9.8"
+    }
+}
