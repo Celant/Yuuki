@@ -1,3 +1,0 @@
-Options +FollowSymlinks
-RewriteEngine on
-RewriteRule ^publish/([^/]+)a legacy.php?data=$1 [NC]
