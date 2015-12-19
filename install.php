@@ -1,9 +1,6 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/secrets.php';
-require __DIR__ . '/nginx.php';
-
-// Can be nginx or apache
 
 $tables = [
 	'server' => "CREATE TABLE server(
