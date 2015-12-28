@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5a9ce4f340e567250eb1c5f5c14884a5",
-    "content-hash": "9e0f3bdfe00fa50e6d0c6bf662940860",
+    "hash": "ea525bd94cd34217ef619f5233c73643",
+    "content-hash": "358de7caa248455ac7fb0e3c58ad6d4a",
     "packages": [
         {
             "name": "catfan/medoo",
@@ -61,12 +61,55 @@
                 "sqlite"
             ],
             "time": "2015-02-11 03:54:23"
+        },
+        {
+            "name": "nnnick/chartjs",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nnnick/Chart.js.git",
+                "reference": "3c6a736413fbe0e1715d3beea489abc8d25620f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nnnick/Chart.js/zipball/3c6a736413fbe0e1715d3beea489abc8d25620f5",
+                "reference": "3c6a736413fbe0e1715d3beea489abc8d25620f5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "release/2.0": "v2.0-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "NICK DOWNIE",
+                    "email": "hello@nickdownie.com"
+                }
+            ],
+            "description": "Simple HTML5 charts using the canvas element.",
+            "homepage": "http://www.chartjs.org/",
+            "keywords": [
+                "JS",
+                "chart"
+            ],
+            "time": "2015-12-21 21:05:38"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nnnick/chartjs": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

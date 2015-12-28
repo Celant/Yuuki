@@ -8,6 +8,7 @@
         }
     ],
     "require": {
-        "catfan/Medoo": "^0.9.8"
+        "catfan/Medoo": "^0.9.8",
+        "nnnick/chartjs": "dev-master"
     }
 }
