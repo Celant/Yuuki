@@ -6,7 +6,7 @@ $data = json_decode(urldecode($_GET['data']), true);
 $data['address'] = $_SERVER['REMOTE_ADDR'];
 $output = array();
 $hash = md5($data['address'] . ":" . $data['port']);
-$disableDB = true;
+$disableDB = false;
 
 if(!$disableDB) {
 

@@ -18,6 +18,9 @@ window.setInterval(function(){
         $("#current-players").text(ret.data.players);
         $("#current-slots").text(ret.data.slots);
     });
+    loadTotalServers(function(ret) {
+        $("#total-servers").text(ret.data.servers);
+    });
 }, 10000);
 
 window.odometerOptions = {

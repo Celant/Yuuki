@@ -46,6 +46,12 @@ switch ($action) {
 
         echo json_encode($response);
         break;
+    case "TotalServers":
+        $return = $database->query("SELECT SUM(*) AS server_total FROM server_details;")->fetchAll()[0];
+        $response['data'] = array('servers' => $return['server_total']);
+
+        echo json_encode($response);
+        break;
     default:
         $response['error'] = true;
         $response['message'] = "Unrecognized endpoint";

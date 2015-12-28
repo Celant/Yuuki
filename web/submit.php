@@ -5,7 +5,7 @@ require '../secrets.php';
 $data = json_decode(urldecode($_GET['data']), true);
 $data['address'] = $_SERVER['REMOTE_ADDR'];
 $output = array();
-$disableDB = true;
+$disableDB = false;
 
 if(!$disableDB) {
 

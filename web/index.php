@@ -73,9 +73,9 @@
 				</div>
 				<div class="col-lg-4">
 					<div class="panel panel-default">
-						<div class="panel-heading">Panel heading without title</div>
-						<div class="panel-body">
-							Panel content
+						<div class="panel-heading">Online Servers</div>
+						<div class="panel-body chart">
+							<span id="total-servers" class="odometer">0</span>
 						</div>
 					</div>
 				</div>
