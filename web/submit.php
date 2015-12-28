@@ -5,7 +5,6 @@ require '../secrets.php';
 $data = json_decode(urldecode($_GET['data']), true);
 $data['address'] = $_SERVER['REMOTE_ADDR'];
 $output = array();
-$hash = md5($data['address'] . ":" . $data['port']);
 $disableDB = true;
 
 if(!$disableDB) {
@@ -25,43 +24,46 @@ if(!$disableDB) {
 	}
 
 	$record = $database->get("server", "id", [
-	    "id" => $hash
+	    "id" => $data['serverId']
 	]);
 
 	if(empty($record)) {
 	    $database->insert("server", [
-	        "id" => $hash,
+	        "id" => $data['serverId'],
 	        "address" => $data['address'],
 	        "port" => $data['port'],
+            "providertoken" => $data['providerId'],
+			"notlegacy" => 1,
 	        "lastupdate" => time(),
 	    ]);
 	    $database->insert("server_details", [
-	        "serverid" => $hash,
+	        "serverid" => $data['serverId'],
 	        "players" => $data['currentPlayers'],
 	        "slots" => $data['maxPlayers'],
             "memory" => $data['systemRam']
 	    ]);
 	} else {
 	    $database->update("server", [
-	        "id" => $hash,
+	        "id" => $data['serverId'],
 	        "address" => $data['address'],
 	        "port" => $data['port'],
+            "providertoken" => $data['providerId'],
 	        "lastupdate" => time(),
 	    ], [
-	        "id" => $hash
+	        "id" => $data['serverId']
 	    ]);
 	    $database->update("server_details", [
-	        "serverid" => $hash,
+	        "serverid" => $data['serverId'],
 	        "players" => $data['currentPlayers'],
 	        "slots" => $data['maxPlayers'],
             "memory" => $data['systemRam']
 	    ], [
-	        "serverid" => $hash
+	        "serverid" => $data['serverId']
 	    ]);
 	}
 }
 
-$output["success"] = "Ok";
+$output["success"] = true;
 
 echo json_encode($output);
 

@@ -1,0 +1,20 @@
+*,
+*::before,
+*::after {
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+}
+li {
+    list-style-type: none;
+}
+dt {
+    line-height: 120%;
+}
+.chart {
+     text-align: center;
+     font-size: 50px;
+ }
+ .content {
+     padding-top: 80px;
+ }

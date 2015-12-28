@@ -1,6 +1,6 @@
 <?php
 $dbuser = "tshock";
-$dbpass = "d582cytqdsoj";
+$dbpass = "herpderp";
 $dbname = "tshock";
 $dbhost = "localhost";
 $dbport = 3306;
