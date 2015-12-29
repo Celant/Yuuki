@@ -41,7 +41,7 @@ if (empty($action)) {
 
 switch ($action) {
     case "CurrentPlayers":
-        $return = $database->query("SELECT SUM(players) AS player_total, SUM(slots) AS slot_total FROM server_details;")->fetchAll()[0];
+        $return = $database->query("SELECT SUM(players) AS player_total, SUM(slots) AS slot_total FROM server_details")->fetchAll()[0];
         $response['data'] = array('players' => $return['player_total'], 'slots' => $return['slot_total']);
 
         echo json_encode($response);
