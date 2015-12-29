@@ -31,6 +31,13 @@ $tables = [
 			ON DELETE CASCADE
 			ON UPDATE CASCADE
 		) ENGINE=InnoDB;",
+	'server_providers' => "CREATE TABLE `server_details`(
+		`id` MEDIUMINT NOT NULL AUTO_INCREMENT,
+		`providertoken` VARCHAR(36) NOT NULL,
+		`providername` VARCHAR(40) NOT NULL,
+		`official` TINYINT(1) DEFAULT 0,
+		PRIMARY KEY (`id`)
+		) ENGINE=InnoDB;",
 ];
 
 $events = [
