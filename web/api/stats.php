@@ -52,6 +52,36 @@ switch ($action) {
 
         echo json_encode($response);
         break;
+    case "History":
+        $return = $database->query("SELECT * FROM archive WHERE timestamp > DATE_SUB(NOW(), INTERVAL 48 HOUR);")->fetchAll();
+        $chartData = [];
+        foreach ($return as $data) {
+            $record["players"] = $data["currentplayers"];
+            $record["slots"] = $data["currentslots"];
+            $record["servers"] = $data["currentservers"];
+            $record["timestamp"] = $data["timestamp"];
+            $chartData[] = $record;
+        }
+        $response['data'] = array('history' => $chartData);
+
+        echo json_encode($response);
+        break;
+    case "Providers":
+        $return = $database->query("SELECT * FROM hosting_providers;")->fetchAll();
+        $providerData = [];
+        foreach ($return as $data) {
+            $servers = $database->query("SELECT COUNT(*) FROM server WHERE providertoken='{$data['providertoken']}';");
+            print_r($servers);
+            $serverData["providertoken"] = $data["providertoken"];
+            $serverData["providername"] = $data["providername"];
+            $serverData["official"] = $data["official"];
+            $serverData["servers"] = $servers;
+            $providerData[] = $serverData;
+        }
+        $response['data'] = array('providers' => $providerData);
+
+        echo json_encode($response);
+        break;
     default:
         $response['error'] = true;
         $response['message'] = "Unrecognized endpoint";

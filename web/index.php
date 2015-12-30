@@ -81,9 +81,19 @@
 				</div>
 				<div class="col-lg-4">
 					<div class="panel panel-default">
-						<div class="panel-heading">Panel heading without title</div>
+						<div class="panel-heading">Server Providers</div>
 						<div class="panel-body">
-							Panel content
+							Pie Chart goes here :D
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">Player Count Over 48 Hours</div>
+						<div class="panel-body chart">
+							<canvas id="history" width="1000" height="400"></canvas>
 						</div>
 					</div>
 				</div>

@@ -1,5 +1,10 @@
 "use strict"; // Fuck knows, Chris made me do it
 
+var graphDates = [];
+var graphPlayers = [];
+var graphSlots = [];
+var graphServers = [];
+
 $(window).ready(function(){ // Called once DOM is loaded (won't wait for images etc to load).
     $(function() {
         $(".dial").knob();
@@ -13,6 +18,33 @@ window.onload = function() {
     });
     loadTotalServers(function(ret) {
         $("#total-servers").text(ret.data.servers);
+    });
+    loadHistory(function(ret) {
+        var x = 0;
+        for (var item of ret.data.history) {
+            if (x % 12 == 0) {
+                graphDates.push(item.timestamp);
+            } else {
+                graphDates.push("");
+            }
+            graphPlayers.push(item.players);
+            graphSlots.push(item.slots);
+            graphServers.push(item.servers);
+            if (x == 3) {
+                x = 0;
+                continue;
+            }
+            x++;
+        }
+        // Get context with jQuery - using jQuery's .get() method.
+        var ctx = $("#history").get(0).getContext("2d");
+        // This will get the first returned node in the jQuery collection.
+        var historyChart = new Chart(ctx).Line(data, {
+            pointHitDetectionRadius: 2,
+            pointDot: false,
+            scaleShowVerticalLines: false,
+            scaleBeginAtZero: true,
+        });
     });
 }
 
@@ -29,6 +61,22 @@ window.setInterval(function(){
 window.odometerOptions = {
     format: 'd'
 }
+
+var data = {
+    labels: graphDates,
+    datasets: [
+        {
+            label: "Players",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            data: graphPlayers
+        }
+    ]
+};
 
 /*
 function setLoadingStatusPanel() {
