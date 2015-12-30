@@ -18,12 +18,13 @@ try {
 }
 
 echo "Connection succesful\r\n";
-echo "Executing .sql file!\r\n";
+echo "Executing .sql files!\r\n";
 
 $command = "mysql -u{$dbuser} -p{$dbpass} "
  . "-h {$dbhost} -D {$dbname} < ";
 
 $output = shell_exec($command . 'setup.sql');
+$output = shell_exec($command . 'providers.sql');
 
 echo "All tables present and accounted for!\r\n";
 echo "Installation complete!\r\n";

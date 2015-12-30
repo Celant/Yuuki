@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `server_details` (
 ) ENGINE=InnoDB;
 CREATE TABLE IF NOT EXISTS `hosting_providers` (
 	`id` MEDIUMINT NOT NULL AUTO_INCREMENT,
-	`providertoken` VARCHAR(36) NOT NULL,
+	`providertoken` VARCHAR(36),
 	`providername` VARCHAR(40) NOT NULL,
 	`official` TINYINT(1) DEFAULT 0,
 	PRIMARY KEY (`id`)
@@ -49,7 +49,7 @@ DO BEGIN
 END!!
 
 CREATE EVENT IF NOT EXISTS archive_stats
-ON SCHEDULE EVERY 1 MINUTE
+ON SCHEDULE EVERY 5 MINUTE
 DO BEGIN
     SET @curplayer = 0;
     SET @curslot = 0;
