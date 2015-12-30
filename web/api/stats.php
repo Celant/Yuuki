@@ -71,7 +71,6 @@ switch ($action) {
         $providerData = [];
         foreach ($return as $data) {
             $servers = $database->query("SELECT COUNT(*) FROM server WHERE providertoken='{$data['providertoken']}';");
-            print_r($servers);
             $serverData["providertoken"] = $data["providertoken"];
             $serverData["providername"] = $data["providername"];
             $serverData["official"] = $data["official"];
