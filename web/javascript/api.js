@@ -47,3 +47,19 @@ function loadHistory(callback) {
         callback(ret);
     });
 }
+
+function loadProviders(callback) {
+    var request = $.get("http://stats.tshock.co/api/stats.php?action=Providers", "json");
+
+    request.done(function(e) {
+        callback(e);
+    });
+
+    request.fail(function() {
+        var ret = {
+            code: 0,
+            data: new Array()
+        }
+        callback(ret);
+    });
+}

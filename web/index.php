@@ -19,7 +19,7 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 	<script src="javascript/api.js"></script>
 	<script src="javascript/stats.js"></script>
@@ -81,9 +81,9 @@
 				</div>
 				<div class="col-lg-4">
 					<div class="panel panel-default">
-						<div class="panel-heading">Server Providers</div>
-						<div class="panel-body">
-							Pie Chart goes here :D
+						<div class="panel-heading">Occupied Servers</div>
+						<div class="panel-body chart">
+							<span id="nonempty-servers" class="odometer">0</span> / <span id="all-servers" class="odometer">0</span>
 						</div>
 					</div>
 				</div>
@@ -91,9 +91,22 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="panel panel-default">
-						<div class="panel-heading">Player Count Over 48 Hours</div>
+						<div class="panel-heading">Player Count Over 48 Hours <span class="chart-hint">- Within 5 minutes of accuracy</span></div>
 						<div class="panel-body chart">
 							<canvas id="history" width="1000" height="400"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Server Providers
+							<span class="glyphicon glyphicon-question-sign pull-right" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="right" data-content="This is tracked by a command-line token passed to servers. If you would like a token please speak to the TShock team."></span>
+						</div>
+						<div class="panel-body chart">
+							<canvas id="providers" width="200" height="200"></canvas>
 						</div>
 					</div>
 				</div>

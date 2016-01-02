@@ -1,10 +1,5 @@
 "use strict"; // Fuck knows, Chris made me do it
 
-var graphDates = [];
-var graphPlayers = [];
-var graphSlots = [];
-var graphServers = [];
-
 $(window).ready(function(){ // Called once DOM is loaded (won't wait for images etc to load).
     $(function() {
         $(".dial").knob();
@@ -18,8 +13,15 @@ window.onload = function() {
     });
     loadTotalServers(function(ret) {
         $("#total-servers").text(ret.data.servers);
+        $("#all-servers").text(ret.data.servers);
+        $("#nonempty-servers").text(ret.data.serversplayers);
     });
     loadHistory(function(ret) {
+        var graphDates = [];
+        var graphPlayers = [];
+        var graphSlots = [];
+        var graphServers = [];
+
         var x = 0;
         for (var item of ret.data.history) {
             if (x % 12 == 0) {
@@ -30,21 +32,53 @@ window.onload = function() {
             graphPlayers.push(item.players);
             graphSlots.push(item.slots);
             graphServers.push(item.servers);
-            if (x == 3) {
-                x = 0;
-                continue;
-            }
             x++;
         }
+
+        var data = {
+            labels: graphDates,
+            datasets: [
+                {
+                    label: "Players",
+                    fillColor: "rgba(151,187,205,0.2)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "rgba(151,187,205,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: graphPlayers
+                }
+            ]
+        };
         // Get context with jQuery - using jQuery's .get() method.
         var ctx = $("#history").get(0).getContext("2d");
         // This will get the first returned node in the jQuery collection.
         var historyChart = new Chart(ctx).Line(data, {
-            pointHitDetectionRadius: 2,
+            pointHitDetectionRadius: 0,
             pointDot: false,
             scaleShowVerticalLines: false,
             scaleBeginAtZero: true,
         });
+    });
+    loadProviders(function(ret) {
+        var providers = []
+        for (var item of ret.data.providers) {
+            console.log(item);
+            var provider = {
+                value: item.servers,
+                color: item.color,
+                highlight: item.highlight,
+                label: item.providername
+            }
+            providers.push(provider);
+        }
+        // Get context with jQuery - using jQuery's .get() method.
+        var ctx = $("#providers").get(0).getContext("2d");
+        // This will get the first returned node in the jQuery collection.
+        var providersChart = new Chart(ctx).Pie(providers);
+    });
+    $(function () {
+        $('[data-toggle="popover"]').popover();
     });
 }
 
@@ -55,28 +89,14 @@ window.setInterval(function(){
     });
     loadTotalServers(function(ret) {
         $("#total-servers").text(ret.data.servers);
+        $("#all-servers").text(ret.data.servers);
+        $("#nonempty-servers").text(ret.data.serversplayers);
     });
 }, 10000);
 
 window.odometerOptions = {
     format: 'd'
 }
-
-var data = {
-    labels: graphDates,
-    datasets: [
-        {
-            label: "Players",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
-            data: graphPlayers
-        }
-    ]
-};
 
 /*
 function setLoadingStatusPanel() {

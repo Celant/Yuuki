@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS `hosting_providers` (
 	`id` MEDIUMINT NOT NULL AUTO_INCREMENT,
 	`providertoken` VARCHAR(36),
 	`providername` VARCHAR(40) NOT NULL,
+	`color` VARCHAR(7) NOT NULL,
+	`highlight` VARCHAR(7) NOT NULL,
 	`official` TINYINT(1) DEFAULT 0,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;

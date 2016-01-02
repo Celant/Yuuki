@@ -15,6 +15,13 @@ dt {
      text-align: center;
      font-size: 50px;
  }
+ .chart-hint {
+      color: #959595;
+  }
+.chart-small {
+     text-align: center;
+     font-size: 25px;
+ }
  .content {
      padding-top: 80px;
  }
