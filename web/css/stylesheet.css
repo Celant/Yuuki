@@ -25,3 +25,6 @@ dt {
  .content {
      padding-top: 80px;
  }
+ .glyphicon-question-sign {
+     cursor: help;
+ }
