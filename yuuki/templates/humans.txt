@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    George -- Developer -- @Celant
+
+# THANKS
+
+# TECHNOLOGY COLOPHON
+    Django
+    HTML5 Boilerplate
+    Twitter Bootstrap
+    HTML5, CSS3
+    jQuery

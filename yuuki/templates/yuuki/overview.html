@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_title %}MPUK Status{% endblock %}
+
+{% block head_css %}<link rel="stylesheet" href="{% static 'css/overview.css' %}">{% endblock %}
+{% block head_javascript %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="{% static 'js/datamaps.all.hires.js' %}"></script>
+<script src="{% static 'js/overview.js' %}"></script>
+{% endblock %}
+
+{% block navbar_inner_home %}
+<li class="active">
+    <a href="{% url 'index' %}">Overview</a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container-flex">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map-panel" class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <span class="panel-title">Regional Network Status</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="map" id="region-map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/overview-map.js' %}"></script>
+{% endblock %}

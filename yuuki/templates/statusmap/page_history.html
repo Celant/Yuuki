@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block head_javascript %}{% endblock %}
+
+{% block head_title %}History{% endblock %}
+
+{% block navbar_inner_history %}
+<li class="active">
+    <a href="{% url 'apps:history' %}">History</a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <script src="{% static 'js/apps.js' %}"></script>
+    <script>
+        window.onload = function() {
+            window.setInterval(function(){
+                var changeid = $('#history-table tbody:first td:eq(2) a').text();
+                $.ajax({
+                    url: "{% url 'apps:history_refresh' %}?changeid=" + changeid,
+                    success: function(data) {
+                        data.forEach(function(obj) {
+                            $('tbody').prepend(`<tr>
+                                    <td><div style="display:none;">` + obj.name + `</div></td>
+                                    <td><div style="display:none;">` + obj.appid + `</div></td>
+                                    <td><div style="display:none;"><a href="` + obj.changelog + `" target="_blank">` + obj.changeid + `</a></div></td>
+                                    <td><div style="display:none;">` + obj.updatedat + `</div></td>
+                                </tr>`);
+                            $('table tr td div').slideDown('slow');
+                        });
+                    }
+                });
+            }, 5000);
+        }
+    </script>
+
+    <div id="history-panel" class="panel panel-default">
+        <div class="panel-heading clearfix aligner">
+            <span class="panel-title aligner-item">Recent updates</span>
+            <div class="btn-group pull-right" role="group" aria-label="Logs filter">
+                <a type="button" class="btn btn-default{% ifequal history_filter 'all' %} active{% endifequal %}" href="?filter=all">All</a>
+                <a type="button" class="btn btn-default{% ifequal history_filter 'watched' %} active{% endifequal %}" href="?filter=watched">Watched App</a>
+                <a type="button" class="btn btn-default{% ifequal history_filter 'watchedbranch' %} active{% endifequal %}" href="?filter=watchedbranch">Watched App & Branch</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            {% if history %}
+                <table id="history-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>AppID</th>
+                            <th>ChangeID</th>
+                            <th>Updated at</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for history_item in history %}
+                            <tr>
+                                <td><div>{{ history_item.name }}</div></td>
+                                <td><div>{{ history_item.appid }}</div></td>
+                                <td><div><a href={{ history_item.changelog }} target="_blank">{{ history_item.changeid }}</a></div></td>
+                                <td><div>{{ history_item.updatedat|date:'F d, Y, h:i A' }}</div></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No recent updates are available.</p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- /container -->
+{% endblock %}

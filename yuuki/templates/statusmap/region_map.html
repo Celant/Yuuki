@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block head_title %}MPUK Status{% endblock %}
+
+{% block navbar_inner_home %}
+<li class="active">
+    <a href="{% url 'index' %}">Dashboard</a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container-flex">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="col-md-12">
+                <div id="versions-panel" class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <span class="panel-title">Region Overview</span>
+                    </div>
+                    <div class="panel-body">
+                        When nobody watches, I lather myself in vaseline and lay in the garden pretending I'm a slug.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /container -->
+{% endblock %}

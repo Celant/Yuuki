@@ -1,0 +1,4 @@
+Django==1.9
+django-bootstrap3==7.0.1
+djangorestframework==3.4.3
+djangorestframework-filters==0.8.0
