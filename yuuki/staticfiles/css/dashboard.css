@@ -1,0 +1,43 @@
+.container-flex {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+li {
+    list-style-type: none;
+}
+dt {
+    line-height: 120%;
+}
+.chart {
+    text-align: center;
+    font-size: 50px;
+}
+.chart-hint {
+    color: #959595;
+}
+.chart-small {
+    text-align: center;
+    font-size: 25px;
+}
+.content {
+    padding-top: 80px;
+}
+.glyphicon-question-sign {
+    cursor: help;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
