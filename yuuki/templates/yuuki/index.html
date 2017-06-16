@@ -9,8 +9,12 @@
 
 {% block head_javascript %}
 <script src="{% static 'js/vendor/date.js' %}"></script>
-<script src="{% static 'js/playerchart.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.flot.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.flot.resize.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.flot.time.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.flot.pie.js' %}"></script>
 
+<script src="{% static 'js/charts.js' %}"></script>
 <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
 
@@ -68,10 +72,10 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							Server Providers
-							<span class="glyphicon glyphicon-question-sign pull-right" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="right" data-content="This is tracked by a command-line token passed to servers. If you would like a token please speak to the TShock team."></span>
+							<span class="glyphicon glyphicon-question-sign pull-right" aria-hidden="true" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="right" data-content="This is tracked by a command-line token passed to servers. If you would like a token please speak to the TShock team."></span>
 						</div>
 						<div class="panel-body chart">
-							<canvas id="providers" class="chart"></canvas>
+							<div id="chartdivProviders" class="chartdiv" ></div>
 						</div>
 					</div>
 				</div>

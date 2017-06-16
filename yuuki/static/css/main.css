@@ -99,8 +99,15 @@ canvas.chart {
 }
 
 .container-flex {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+@media only screen and (min-width: 600px) {
+  .container-flex {
     margin-left: 50px;
     margin-right: 50px;
+  }
 }
 
 .navbar-inverse .navbar-brand {

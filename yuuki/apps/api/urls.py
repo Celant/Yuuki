@@ -1,8 +1,13 @@
 from django.conf.urls import url
 
-from . import views
+from yuuki.apps.api.views import (
+    SubmitView,
+    CurrentPlayersView
+)
 
 urlpatterns = [
-    url(r'authenticate$', views.obtain_auth_token),
-    url(r'test$', views.Test.as_view(), name='test'),
+    url(r'submit/(?P<encoded>.*)$', SubmitView.as_view(), name='submit'),
+    url(r'publish/(?P<encoded>.*)$',SubmitView.as_view(), name='submit'),
+    url(r'stats/currentplayers$',CurrentPlayersView.as_view(), name='submit'),
+    
 ]

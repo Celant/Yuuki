@@ -24,8 +24,7 @@ from yuuki.apps.yuuki import views
 urlpatterns = [
     url(r'^$', views.Index.as_view(), name='index'),
     url(r'^api/', include('yuuki.apps.api.urls')),
-    url(r'^admin/', include('yuuki.apps.yuuki.urls')),
-    url(r'^admin/django/', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     url(r'^static/(?P<path>.*)$', never_cache(serve_static)),
     url(r'^', include('yuuki.apps.yuuki.urls')),
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

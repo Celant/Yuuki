@@ -4,11 +4,11 @@
 
 var stats = {}
 
-stats.chartPlot = function onDataReceived(chartDiv, chartLegend, series) {
-  
-	var div = jQuery( chartDiv );
-	var legendContainer = jQuery(chartLegend );
-  
+stats.chartUsers = function(chartDiv, chartLegend, series) {
+
+  var div = jQuery(chartDiv);
+  var legendContainer = jQuery(chartLegend);
+
   var plot = jQuery.plot(div, series, {
     series: {
       lines: {
@@ -31,7 +31,7 @@ stats.chartPlot = function onDataReceived(chartDiv, chartLegend, series) {
       tickFormatter: (function(d) {
         return stats.nFormatter(d);
       }),
-      tickColor: '#323232',
+      tickColor: '#d9d9d9',
       autoscaleMargin: 0.15,
     },
     xaxis: {
@@ -61,13 +61,13 @@ stats.chartPlot = function onDataReceived(chartDiv, chartLegend, series) {
         }
       }),
       lastDate: null,
-      tickColor: '#232628'
+      tickColor: '#ffffff'
     },
     grid: {
       hoverable: true,
       clickable: false,
       borderWidth: 0,
-      backgroundColor: '#232628'
+      backgroundColor: '#ffffff'
     }
   });
 
@@ -75,10 +75,10 @@ stats.chartPlot = function onDataReceived(chartDiv, chartLegend, series) {
     if (item) {
       var x = (item.datapoint[1]).toFixed(0);
       var date = new Date(item.datapoint[0]);
-      jQuery("#charttooltip").html(date.toLocaleTimeString() + ' ' + x + ' USERS')
+      jQuery("#charttooltip").html(date.toLocaleTimeString() + ' ' + x + ' Users')
         .css({
-          top: item.pageY - 30,
-          left: item.pageX - 25
+          top: item.pageY - 50,
+          left: item.pageX - 45
         })
         .fadeIn(200);
     }
@@ -88,22 +88,53 @@ stats.chartPlot = function onDataReceived(chartDiv, chartLegend, series) {
   });
 }
 
+stats.chartProviders = function(chartDiv, series) {
+
+  var div = jQuery(chartDiv);
+
+  var plot = jQuery.plot(div, series, {
+    series: {
+      pie: {
+        show: true,
+        label: {
+          radius: 0.95,
+          formatter: function(label, slice) {
+						return "<div style='font-size:15px;text-align:center;padding:2px;color:" + slice.color + ";'>" + label + "<br/>" + Math.round(slice.percent) + "% (" + slice.data[0][1] + ")</div>";
+					}
+        }
+      }
+    },
+    grid: {
+      hoverable: true,
+      clickable: true
+    },
+    legend: {
+      show: false
+    },
+  });
+}
+
 stats.nFormatter = function(num) {
-	var isNegative = false
-	if (num < 0) {
-		isNegative = true
-	}
-	num = Math.abs(num)
-	var formattedNumber = 0;
-	if (num >= 1000000000) {
-		formattedNumber = (num / 1000000000).toFixed(1) + 'G';
-	} else if (num >= 1000000) {
-		formattedNumber =  (num / 1000000).toFixed(1) + 'M';
-	} else  if (num >= 1000) {
-		formattedNumber =  (num / 1000).toFixed(1) + 'K';
-	} else {
-		formattedNumber = num;
-	}
-	if(isNegative) { formattedNumber = '-' + formattedNumber }
-	return formattedNumber;
+  var isNegative = false
+  if (num < 0) {
+    isNegative = true
+  }
+  num = Math.abs(num)
+  var formattedNumber = 0;
+  if (num >= 1000000000) {
+    formattedNumber = (num / 1000000000).toFixed(1) + 'G';
+  }
+  else if (num >= 1000000) {
+    formattedNumber = (num / 1000000).toFixed(1) + 'M';
+  }
+  else if (num >= 1000) {
+    formattedNumber = (num / 1000).toFixed(1) + 'K';
+  }
+  else {
+    formattedNumber = num;
+  }
+  if (isNegative) {
+    formattedNumber = '-' + formattedNumber
+  }
+  return formattedNumber;
 }

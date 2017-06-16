@@ -1,66 +1,83 @@
 "use strict"; // Fuck knows, Chris made me do it
 
-/*global $*/
+/*global jQuery*/
 /*global api*/
 /*global stats*/
-/*global d3*/
 
 window.onload = function() {
     api.loadCurrentPlayers(function(ret) {
-        $("#current-players").text(ret.data.players);
-        $("#current-slots").text(ret.data.slots);
+        jQuery("#current-players").text(ret.cur_players);
+        jQuery("#current-slots").text(ret.max_players);
     });
     api.loadTotalServers(function(ret) {
-        $("#total-servers").text(ret.data.servers);
-        $("#all-servers").text(ret.data.servers);
-        $("#nonempty-servers").text(ret.data.serversplayers);
+        jQuery("#total-servers").text(ret.servers);
+        jQuery("#all-servers").text(ret.servers);
+        jQuery("#nonempty-servers").text(ret.serversplayers);
     });
     api.loadHistory(function(ret) {
-        var chartData = {};
-        
-        chartData.label = "Concurrent players";
-        chartData.color = "#428bca";
-        chartData.data = [];
-        
-        for (var item of ret.data.history) {
+        var chartData = [];
+        var series = {};
+
+        series.label = "Concurrent players";
+        series.color = "#428bca";
+        series.data = [];
+
+        for (var item of ret.history) {
             var datapoint = [
                 Date.parse(item.timestamp).getTime(),
                 parseInt(item.players)
             ];
-            chartData.data.push(datapoint);
+            series.data.push(datapoint);
         }
-        
-        console.log(JSON.stringify(chartData));
-        
-        stats.chartPlot( '#chartdivUsers', '#chartlegendUsers', [chartData] );
+        chartData.push(series);
+
+        stats.chartUsers('#chartdivUsers', '#chartlegendUsers', chartData);
     });
     api.loadProviders(function(ret) {
-        var providers = []
-        for (var item of ret.data.providers) {
+        var chartData = [];
+
+        for (var item of ret.providers) {
             var provider = {
-                value: item.servers,
+                data: item.servers,
                 color: item.color,
                 highlight: item.highlight,
                 label: item.providername
             }
-            providers.push(provider);
+            chartData.push(provider);
         }
-        // Get context with jQuery - using jQuery's .get() method.
-        var ctx = $("#providers").get(0).getContext("2d");
-        // This will get the first returned node in the jQuery collection.
-        var providersChart = new Chart(ctx).Pie(providers);
+        
+        stats.chartProviders('#chartdivProviders', chartData);
     });
+
+    jQuery(function() {
+        jQuery('[data-toggle="popover"]').popover()
+    })
+    
+    if (document.documentElement.clientWidth > 900) {
+        jQuery(function() {
+            jQuery("<div class='chartooltip' id='charttooltip'></div>").css({
+        	    position: "absolute",
+        		border: "1px solid #ffdddd",
+        		display: "none",
+        		padding: "2px",
+        		"background-color": "white",
+        		color: "black",
+        		"font-size": "15px",
+        		opacity: "1.0",
+        	}).appendTo("body");
+	    });
+    }
 }
 
-window.setInterval(function(){
+window.setInterval(function() {
     api.loadCurrentPlayers(function(ret) {
-        $("#current-players").text(ret.data.players);
-        $("#current-slots").text(ret.data.slots);
+        jQuery("#current-players").text(ret.cur_players);
+        jQuery("#current-slots").text(ret.max_players);
     });
     api.loadTotalServers(function(ret) {
-        $("#total-servers").text(ret.data.servers);
-        $("#all-servers").text(ret.data.servers);
-        $("#nonempty-servers").text(ret.data.serversplayers);
+        jQuery("#total-servers").text(ret.servers);
+        jQuery("#all-servers").text(ret.servers);
+        jQuery("#nonempty-servers").text(ret.serversplayers);
     });
 }, 10000);
 

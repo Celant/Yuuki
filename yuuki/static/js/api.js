@@ -5,7 +5,7 @@
 var api = {}
 
 api.loadCurrentPlayers = function (callback) {
-    var request = $.get("http://stats.tshock.co/api/stats.php?action=CurrentPlayers", "json");
+    var request = $.get("/api/stats/currentplayers", "json");
 
     request.done(function(e) {
         callback(e);
@@ -21,7 +21,7 @@ api.loadCurrentPlayers = function (callback) {
 }
 
 api.loadTotalServers = function (callback) {
-    var request = $.get("http://stats.tshock.co/api/stats.php?action=TotalServers", "json");
+    var request = $.get("/api/stats/totalservers", "json");
 
     request.done(function(e) {
         callback(e);
@@ -37,7 +37,7 @@ api.loadTotalServers = function (callback) {
 }
 
 api.loadHistory = function (callback) {
-    var request = $.get("http://stats.tshock.co/api/stats.php?action=History", "json");
+    var request = $.get("/api/stats/history", "json");
 
     request.done(function(e) {
         callback(e);
@@ -53,7 +53,7 @@ api.loadHistory = function (callback) {
 }
 
 api.loadProviders = function (callback) {
-    var request = $.get("http://stats.tshock.co/api/stats.php?action=Providers", "json");
+    var request = $.get("/api/stats/providers", "json");
 
     request.done(function(e) {
         callback(e);
