@@ -4,7 +4,7 @@ from influxdb import InfluxDBClient
 
 import urlparse, hashlib, json
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static/')
 
 client = InfluxDBClient('127.0.0.1', 8086, 'root', 'root', 'tshock')
 
