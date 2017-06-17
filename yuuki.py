@@ -2,11 +2,18 @@ from flask import Flask, render_template, Response
 
 from influxdb import InfluxDBClient
 
-import urlparse, hashlib, json
+import os, urlparse, hashlib, json
+
+influx_host = os.environ.get('INFLUX_HOST')
+influx_port = os.environ.get('INFLUX_PORT')
+influx_user = os.environ.get('INFLUX_USER')
+influx_password = os.environ.get('INFLUX_PASSWORD')
+
+
 
 app = Flask(__name__)
 
-client = InfluxDBClient('127.0.0.1', 8086, 'root', 'root', 'tshock')
+client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 'tshock')
 
 query_cur_players = 'SELECT sum("cur_players") FROM (SELECT last("cur_players") AS "cur_players" FROM server_stats GROUP BY "server") WHERE time > now() - 2m'
 query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") AS "max_players" FROM server_stats GROUP BY "server") WHERE time > now() - 2m'
@@ -35,7 +42,7 @@ def submit(encoded):
         server.terraria_version = data['terrariaVersion']
         
         if (data['providerId']):
-            server.provider = self.get_object(data['providerId'])
+            server.provider = data['providerId']
         else:
             server.provider = None
     else:
