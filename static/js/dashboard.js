@@ -10,9 +10,9 @@ window.onload = function() {
         jQuery("#current-slots").text(ret.max_players);
     });
     api.loadTotalServers(function(ret) {
-        jQuery("#total-servers").text(ret.servers);
-        jQuery("#all-servers").text(ret.servers);
-        jQuery("#nonempty-servers").text(ret.serversplayers);
+        jQuery("#total-servers").text(ret.total_servers);
+        jQuery("#all-servers").text(ret.total_servers);
+        jQuery("#nonempty-servers").text(ret.occupied_servers);
     });
     api.loadHistory(function(ret) {
         var chartData = [];
