@@ -24,7 +24,7 @@ window.onload = function() {
 
         for (var item of ret.history) {
             var datapoint = [
-                Date.parse(item.timestamp).getTime(),
+                item.time,
                 parseInt(item.players)
             ];
             series.data.push(datapoint);
