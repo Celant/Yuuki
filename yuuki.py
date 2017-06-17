@@ -19,7 +19,7 @@ query_cur_players = 'SELECT sum("cur_players") FROM (SELECT last("cur_players") 
 query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") AS "max_players" FROM server_stats GROUP BY "server") WHERE time > now() - 5m'
 query_total_servers = 'SELECT count("port") FROM "server" WHERE time > now() - 5m'
 query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE "cur_players" > 0 AND time > now() - 5mm'
-query_historical_players = 'SELECT sum("cur_players") FROM "server_stats" WHERE time > now() - 48h GROUP BY time(5m)'
+query_historical_players = 'SELECT sum("cur_players") FROM "server_stats" WHERE time > now() - 24h GROUP BY time(5m)'
 
 @app.route('/')
 def index():
