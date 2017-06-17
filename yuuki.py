@@ -19,6 +19,7 @@ query_cur_players = 'SELECT sum("cur_players") FROM (SELECT last("cur_players") 
 query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") AS "max_players" FROM server_stats GROUP BY "server") WHERE time > now() - 2m'
 query_total_servers = 'SELECT count("port") FROM "server" WHERE time > now() - 2m'
 query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE "cur_players" > 0 AND time > now() - 2m'
+query_historical_players = 'SELECT "cur_players" FROM "server_stats" WHERE time > now() - 48h'
 
 @app.route('/')
 def index():
@@ -148,5 +149,17 @@ def total_servers():
     else:
         response['occupied_servers'] = stat['count']
 
+
+    return Response(json.dumps(response), mimetype='application/json')
+
+@app.route('/api/stats/history')
+def history():
+    response = {'error': False, 'message': '', 'history': list()}
+    result = client.query(query_historical_players)
+    generator = result.get_points()
+
+    for stat in generator:
+	print(stat)
+        response['history'].append(stat)
 
     return Response(json.dumps(response), mimetype='application/json')
