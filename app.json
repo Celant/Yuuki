@@ -1,0 +1,8 @@
+{
+  "name": "Yuuki",
+  "description": "The new TShock statistics server",
+  "image": "heroku/python",
+  "repository": "https://github.com/Celant/Yuuki",
+  "keywords": ["python" ],
+  "addons": [ "heroku-postgresql" ]
+}

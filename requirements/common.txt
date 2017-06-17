@@ -1,4 +1,4 @@
-Django==1.9
-django-bootstrap3==7.0.1
-djangorestframework==3.4.3
-djangorestframework-filters==0.8.0
+Flask==0.12.2
+influxdb==4.1.1
+Jinja2==2.9.6
+requests==2.18.1
