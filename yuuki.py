@@ -17,6 +17,8 @@ client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 
 
 query_cur_players = 'SELECT sum("cur_players") FROM (SELECT last("cur_players") AS "cur_players" FROM server_stats GROUP BY "server") WHERE time > now() - 2m'
 query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") AS "max_players" FROM server_stats GROUP BY "server") WHERE time > now() - 2m'
+query_total_servers = 'SELECT count("port") FROM "server" WHERE time > now() - 2m'
+query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE "cur_players" > 0 AND time > now() - 2m'
 
 @app.route('/')
 def index():
@@ -119,6 +121,32 @@ def cur_players():
         response['max_players'] = 0
     else:
         response['max_players'] = stat['sum']
+
+
+    return Response(json.dumps(response), mimetype='application/json')
+
+@app.route('/api/stats/totalservers')
+def total_servers():
+    response = {'error': False, 'message': ''}
+    result = client.query(query_total_servers)
+    generator = result.get_points()
+
+    try:
+        stat = next(generator)
+    except StopIteration:
+        response['total_servers'] = 0
+    else:
+        response['total_servers'] = stat['count']
+
+    result = client.query(query_occupied_servers)
+    generator = result.get_points()
+
+    try:
+        stat = next(generator)
+    except StopIteration:
+        response['occupied_servers'] = 0
+    else:
+        response['occupied_servers'] = stat['count']
 
 
     return Response(json.dumps(response), mimetype='application/json')
