@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 
 from influxdb import InfluxDBClient
 
@@ -50,7 +50,13 @@ def submit(encoded):
             server.provider = None
     else:
         m = hashlib.md5()
-        m.update(self.get_client_ip(request) + ":" + str(data['port']))
+
+	if request.headers.getlist("X-Forwarded-For"):
+            ip = request.headers.getlist("X-Forwarded-For")[0]
+        else:
+            ip = request.remote_addr
+
+        m.update(ip + ":" + str(data['port']))
         
         server.fingerprint = m.hexdigest()
         server.port = data['port']
