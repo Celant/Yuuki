@@ -25,7 +25,7 @@ window.onload = function() {
         for (var item of ret.history) {
             var datapoint = [
                 Date.parse(item.time.replace(/\.(.+)Z/g, "Z")),
-                parseInt(item.cur_players)
+                parseInt(item.sum? item.sum : '0')
             ];
             series.data.push(datapoint);
         }
