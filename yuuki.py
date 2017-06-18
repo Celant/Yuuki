@@ -18,7 +18,7 @@ client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 
 query_cur_players = 'SELECT sum("cur_players") FROM (SELECT last("cur_players") AS "cur_players" FROM server_stats GROUP BY "server") WHERE time > now() - 5m'
 query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") AS "max_players" FROM server_stats GROUP BY "server") WHERE time > now() - 5m'
 query_total_servers = 'SELECT count("port") FROM "server" WHERE time > now() - 5m'
-query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE "cur_players" > 0 AND time > now() - 5mm'
+query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE "cur_players" > 0 AND time > now() - 5m'
 query_historical_players = 'SELECT sum("cur_players") FROM "server_stats" WHERE time > now() - 24h GROUP BY time(5m)'
 
 @app.route('/')
@@ -87,17 +87,26 @@ def submit(encoded):
     stats.cur_players = data['currentPlayers']
     stats.max_players = data['maxPlayers']
     stats.memory = data['systemRam']
+    
+    if 'ignorePluginVersion' in data:
+        if (not server.is_legacy):
+            stats.ignore_plugin_version = data['ignorePluginVersion']
+        else:
+            stats.ignore_plugin_version = False
+    else:
+        stats.ignore_plugin_version = False
 
     json_body = [
         {
             "measurement": "server_stats",
             "tags": {
-                "server": stats.server
+                "server": stats.server,
             },
             "fields": {
                 "cur_players": stats.cur_players,
                 "max_players": stats.max_players,
                 "memory": stats.memory,
+                "ignore_plugin_version": stats.ignore_plugin_version
             }
         }
     ]
