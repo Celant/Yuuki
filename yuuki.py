@@ -176,7 +176,6 @@ def history():
     generator = result.get_points()
 
     for stat in generator:
-	print(stat)
         response['history'].append(stat)
 
     return Response(json.dumps(response), mimetype='application/json')
