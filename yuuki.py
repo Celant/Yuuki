@@ -186,7 +186,7 @@ def providers():
     response = {'error': False, 'message': '', 'providers': list()}
 
     data_file = os.getenv('PROVIDER_JSON', "[]")
-    data = json.load(data_file)
+    data = json.loads(data_file)
 
     for provider in data:
         serverData = {}
