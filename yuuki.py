@@ -20,6 +20,8 @@ query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") 
 query_total_servers = 'SELECT count("port") FROM "server" WHERE time > now() - 5m'
 query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE "cur_players" > 0 AND time > now() - 5m'
 query_historical_players = 'SELECT sum("cur_players") FROM "server_stats" WHERE time > now() - 24h GROUP BY time(5m)'
+query_provider_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'{0}\' AND time > now() - 5m'
+query_providerless_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'\' AND time > now() - 5m'
 
 @app.route('/')
 def index():
@@ -176,5 +178,52 @@ def history():
     for stat in generator:
 	print(stat)
         response['history'].append(stat)
+
+    return Response(json.dumps(response), mimetype='application/json')
+
+@app.route('/api/stats/providers')
+def providers():
+    response = {'error': False, 'message': '', 'providers': list()}
+
+    data_file = os.getenv('PROVIDER_JSON', "[]")
+    data = json.load(data_file)
+
+    for provider in data:
+        serverData = {}
+        serverData["providername"] = provider["providername"];
+        serverData["color"] = provider["color"];
+        serverData["highlight"] = provider["highlight"];
+        serverData["official"] = provider["official"];
+
+        result = client.query(query_provider_servers.format(provider["providertoken"]))
+        generator = result.get_points()
+
+        try:
+            stat = next(generator)
+        except StopIteration:
+            serverData['servers'] = 0
+        else:
+            serverData['servers'] = stat['count']
+
+        response['providers'].append(serverData)
+
+    serverData = {}
+    serverData["providername"] = 'Other';
+    serverData["color"] = '#CCCCCC';
+    serverData["highlight"] = '#DDDDDD';
+    serverData["official"] = 0;
+
+    result = client.query(query_providerless_servers)
+    generator = result.get_points()
+
+    try:
+        stat = next(generator)
+    except StopIteration:
+       serverData['servers'] = 0
+    else:
+       serverData['servers'] = stat['count']
+
+    response['providers'].append(serverData)
+
 
     return Response(json.dumps(response), mimetype='application/json')
