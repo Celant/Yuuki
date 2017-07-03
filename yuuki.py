@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Response, request
-
 from influxdb import InfluxDBClient
+from ddtrace import tracer
+from ddtrace.contrib.flask import TraceMiddleware
 
 from requests.exceptions import ConnectionError
 
@@ -11,9 +12,8 @@ influx_port = os.environ.get('INFLUX_PORT')
 influx_user = os.environ.get('INFLUX_USER')
 influx_password = os.environ.get('INFLUX_PASSWORD')
 
-
-
 app = Flask(__name__)
+traced_app = TraceMiddleware(app, tracer, service="rocky-journey-34509-trace")
 
 client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 'tshock', timeout=1, retries=1)
 
