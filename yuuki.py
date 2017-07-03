@@ -2,6 +2,8 @@ from flask import Flask, render_template, Response, request
 
 from influxdb import InfluxDBClient
 
+from requests.exceptions import ConnectionError
+
 import os, urlparse, hashlib, json
 
 influx_host = os.environ.get('INFLUX_HOST')
@@ -13,7 +15,7 @@ influx_password = os.environ.get('INFLUX_PASSWORD')
 
 app = Flask(__name__)
 
-client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 'tshock')
+client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 'tshock', timeout=1)
 
 query_cur_players = 'SELECT sum("cur_players") FROM (SELECT last("cur_players") AS "cur_players" FROM server_stats GROUP BY "server") WHERE time > now() - 5m'
 query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") AS "max_players" FROM server_stats GROUP BY "server") WHERE time > now() - 5m'
@@ -22,6 +24,16 @@ query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE 
 query_historical_players = 'SELECT sum("cur_players") FROM "server_stats" WHERE time > now() - 24h GROUP BY time(5m)'
 query_provider_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'{0}\' AND time > now() - 5m'
 query_providerless_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'\' AND time > now() - 5m'
+
+def influx_query(query):
+    result = client.query(query)
+
+    try:
+        generator = result.get_points()
+    except ConnectionError:
+        return None
+
+    return generator
 
 @app.route('/')
 def index():
@@ -112,16 +124,22 @@ def submit(encoded):
             }
         }
     ]
-    
-    client.write_points(json_body)
 
+    try:
+        client.write_points(json_body)
+    except ConnectionError:
+        return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
     return json.dumps( {'success': True} )
 
 @app.route('/api/stats/currentplayers')
 def cur_players():
     response = {'error': False, 'message': ''}
-    result = client.query(query_cur_players)
-    generator = result.get_points()
+    generator = influx_query(query_cur_players)
+
+    if generator == None:
+        response['error'] = True
+        response['message'] = 'Failed to connect to InfluxDB'
+        return Response(json.dumps(response), mimetype='application/json')
 
     try:
         stat = next(generator)
@@ -130,8 +148,7 @@ def cur_players():
     else:
         response['cur_players'] = stat['sum']
 
-    result = client.query(query_max_players)
-    generator = result.get_points()
+    generator = influx_query(query_max_players)
 
     try:
         stat = next(generator)
@@ -148,6 +165,11 @@ def total_servers():
     response = {'error': False, 'message': ''}
     result = client.query(query_total_servers)
     generator = result.get_points()
+
+    if generator == None:
+        response['error'] = True
+        response['message'] = 'Failed to connect to InfluxDB'
+        return Response(json.dumps(response), mimetype='application/json')
 
     try:
         stat = next(generator)
@@ -175,6 +197,11 @@ def history():
     result = client.query(query_historical_players)
     generator = result.get_points()
 
+    if generator == None:
+        response['error'] = True
+        response['message'] = 'Failed to connect to InfluxDB'
+        return Response(json.dumps(response), mimetype='application/json')
+
     for stat in generator:
         response['history'].append(stat)
 
@@ -196,6 +223,11 @@ def providers():
 
         result = client.query(query_provider_servers.format(provider["providertoken"]))
         generator = result.get_points()
+
+        if generator == None:
+            response['error'] = True
+            response['message'] = 'Failed to connect to InfluxDB'
+            return Response(json.dumps(response), mimetype='application/json')
 
         try:
             stat = next(generator)
