@@ -24,11 +24,11 @@ query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE 
 query_historical_players = 'SELECT sum("cur_players") FROM "server_stats" WHERE time > now() - 24h GROUP BY time(5m)'
 query_provider_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'{0}\' AND time > now() - 5m'
 query_providerless_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'\' AND time > now() - 5m'
+query_status = 'SELECT count("port") FROM "server" WHERE time > now() - 1s'
 
 def influx_query(query):
-    result = client.query(query)
-
     try:
+        result = client.query(query)
         generator = result.get_points()
     except ConnectionError:
         return None
@@ -257,3 +257,23 @@ def providers():
 
 
     return Response(json.dumps(response), mimetype='application/json')
+
+@app.route('/api/stats/status')
+def status():
+    response = {'error': False, 'message': ''}
+    generator = influx_query(query_status)
+
+    if generator == None:
+        response['error'] = True
+        response['message'] = 'Failed to connect to InfluxDB'
+        return Response(json.dumps(response), mimetype='application/json')
+
+    try:
+        stat = next(generator)
+    except:
+        response['error'] = True
+        response['message'] = 'There was a problem retrieving data from InfluxDB'
+    else:
+        response['error'] = False
+        response['message'] = 'OK'
+
