@@ -15,7 +15,7 @@ influx_password = os.environ.get('INFLUX_PASSWORD')
 
 app = Flask(__name__)
 
-client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 'tshock', timeout=1)
+client = InfluxDBClient(influx_host, influx_port, influx_user, influx_password, 'tshock', timeout=1, retries=1)
 
 query_cur_players = 'SELECT sum("cur_players") FROM (SELECT last("cur_players") AS "cur_players" FROM server_stats GROUP BY "server") WHERE time > now() - 5m'
 query_max_players = 'SELECT sum("max_players") FROM (SELECT last("max_players") AS "max_players" FROM server_stats GROUP BY "server") WHERE time > now() - 5m'
@@ -95,7 +95,7 @@ def submit(encoded):
 
     try:
         client.write_points(json_body)
-    except ConnectionError:
+    except:
         return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
 
     stats = type('', (), {})()
@@ -130,7 +130,7 @@ def submit(encoded):
 
     try:
         client.write_points(json_body)
-    except ConnectionError:
+    except:
         return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
     return json.dumps( {'success': True} )
 
