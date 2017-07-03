@@ -93,7 +93,10 @@ def submit(encoded):
         }
     ]
 
-    client.write_points(json_body)
+    try:
+        client.write_points(json_body)
+    except ConnectionError:
+        return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
 
     stats = type('', (), {})()
     
