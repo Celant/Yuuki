@@ -166,8 +166,7 @@ def cur_players():
 @app.route('/api/stats/totalservers')
 def total_servers():
     response = {'error': False, 'message': ''}
-    result = client.query(query_total_servers)
-    generator = result.get_points()
+    generator = influx_query(query_total_servers)
 
     if generator == None:
         response['error'] = True
@@ -181,8 +180,7 @@ def total_servers():
     else:
         response['total_servers'] = stat['count']
 
-    result = client.query(query_occupied_servers)
-    generator = result.get_points()
+    generator = influx_query(query_occupied_servers)
 
     try:
         stat = next(generator)
@@ -197,8 +195,7 @@ def total_servers():
 @app.route('/api/stats/history')
 def history():
     response = {'error': False, 'message': '', 'history': list()}
-    result = client.query(query_historical_players)
-    generator = result.get_points()
+    generator = influx_query(query_historical_players)
 
     if generator == None:
         response['error'] = True
@@ -224,8 +221,7 @@ def providers():
         serverData["highlight"] = provider["highlight"];
         serverData["official"] = provider["official"];
 
-        result = client.query(query_provider_servers.format(provider["providertoken"]))
-        generator = result.get_points()
+        generator = influx_query(query_provider_servers.format(provider["providertoken"]))
 
         if generator == None:
             response['error'] = True
@@ -247,7 +243,7 @@ def providers():
     serverData["highlight"] = '#DDDDDD';
     serverData["official"] = 0;
 
-    result = client.query(query_providerless_servers)
+    generator = influx_query(query_providerless_servers)
     generator = result.get_points()
 
     try:
