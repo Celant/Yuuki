@@ -246,7 +246,7 @@ def providers():
     serverData["highlight"] = '#DDDDDD';
     serverData["official"] = 0;
 
-    generator = influx_query(query_providerless_servers)
+    result = influx_query(query_providerless_servers)
     generator = result.get_points()
 
     try:
@@ -276,7 +276,9 @@ def status():
     except:
         response['error'] = True
         response['message'] = 'There was a problem retrieving data from InfluxDB'
+        return Response(json.dumps(response), mimetype='application/json')
     else:
         response['error'] = False
         response['message'] = 'OK'
+        return Response(json.dumps(response), mimetype='application/json')
 
