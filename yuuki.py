@@ -94,7 +94,10 @@ def submit(encoded):
     ]
 
     try:
-        client.write_points(json_body)
+        res = client.write_points(json_body)
+        if not res:
+            print(json_body)
+            return json.dumps( {'success': False} )
     except:
         return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
 
@@ -129,7 +132,10 @@ def submit(encoded):
     ]
 
     try:
-        client.write_points(json_body)
+        res = client.write_points(json_body)
+        if not res:
+	    print(json_body)
+            return json.dumps( {'success': False} )
     except:
         return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
     return json.dumps( {'success': True} )
