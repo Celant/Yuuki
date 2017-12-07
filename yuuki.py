@@ -3,7 +3,7 @@ from influxdb import InfluxDBClient
 
 from requests.exceptions import ConnectionError
 
-import os, urlparse, hashlib, json
+import os, sys, urlparse, hashlib, json
 
 influx_host = os.environ.get('INFLUX_HOST')
 influx_port = os.environ.get('INFLUX_PORT')
@@ -21,7 +21,7 @@ query_occupied_servers = 'SELECT count("cur_players") FROM "server_stats" WHERE 
 query_historical_players = 'SELECT sum("cur_players") FROM "server_stats" WHERE time > now() - 24h GROUP BY time(5m)'
 query_provider_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'{0}\' AND time > now() - 5m'
 query_providerless_servers = 'SELECT count("port") FROM "server" WHERE "provider" = \'\' AND time > now() - 5m'
-query_status = 'SELECT count("port") FROM "server" WHERE time > now() - 1s'
+query_status = 'SELECT count("port") FROM "server" WHERE time > now() - 5m'
 
 def influx_query(query):
     try:
@@ -96,6 +96,7 @@ def submit(encoded):
             print(json_body)
             return json.dumps( {'success': False} )
     except:
+        raise
         return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
 
     stats = type('', (), {})()
@@ -134,6 +135,7 @@ def submit(encoded):
 	    print(json_body)
             return json.dumps( {'success': False} )
     except:
+        raise
         return json.dumps( {'success': True, 'message': 'Data not submitted to datastore. Cached for next connection.'} )
     return json.dumps( {'success': True} )
 
@@ -246,8 +248,10 @@ def providers():
     serverData["highlight"] = '#DDDDDD';
     serverData["official"] = 0;
 
-    result = influx_query(query_providerless_servers)
-    generator = result.get_points()
+    generator = influx_query(query_providerless_servers)
+
+    if generator == None:
+        return Response(json.dumps(response), mimetype='application/json')
 
     try:
         stat = next(generator)
