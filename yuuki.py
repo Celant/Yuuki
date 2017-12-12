@@ -43,7 +43,7 @@ def submit(encoded):
     if request.method == 'GET':
         decoded = urlparse.unquote(encoded)
         data = json.loads(decoded)
-    else if request.method == 'POST':
+    elif request.method == 'POST':
         data = request.get_json()
 
     server = type('', (), {})()
